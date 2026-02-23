@@ -1,56 +1,49 @@
-/*Problem: Given an array of integers, rotate the array to the right by k positions.
+/*Problem: Given an array of integers, find two elements whose sum is closest to zero.
 Input:
 - First line: integer n
-- Second line: n integers
-- Third line: integer k
+- Second line: n space-separated integers
 Output:
-- Print the rotated array
+- Print the pair of elements whose sum is closest to zero
 Example:
 Input:
 5
-1 2 3 4 5
-2
+1 60 -10 70 -80
 Output:
-4 5 1 2 3
+-10 1
+Explanation: Among all possible pairs, the sum of -10 and 1 is -9, which is the closest to zero compared to other pairs.
 */
 #include <stdio.h>
-
+#include <stdlib.h>
+#include <math.h>
+int compare(const void *a, const void *b) {
+    return (*(int*)a - *(int*)b);
+}
 int main() {
     int n;
     printf("Enter size of array: ");
     scanf("%d", &n);
-
     int arr[n];
-
     printf("Enter array elements:\n");
     for(int i = 0; i < n; i++) {
         scanf("%d", &arr[i]);
     }
-
-    int k;
-    printf("Enter value of k: ");
-    scanf("%d", &k);
-
-    // Handle cases where k > n
-    k = k % n;
-
-    int temp[n];
-
-    // Copy last k elements to beginning
-    for(int i = 0; i < k; i++) {
-        temp[i] = arr[n - k + i];
+    qsort(arr, n, sizeof(int), compare);
+    int left = 0;
+    int right = n - 1;
+    int minSum = 1000000;
+    int minLeft = left, minRight = right;
+    while(left < right) {
+        int sum = arr[left] + arr[right];
+        if(abs(sum) < abs(minSum)) {
+            minSum = sum;
+            minLeft = left;
+            minRight = right;
+        }
+        if(sum < 0)
+            left++;
+        else
+            right--;
     }
-
-    // Copy remaining elements
-    for(int i = k; i < n; i++) {
-        temp[i] = arr[i - k];
-    }
-
-    // Print rotated array
-    printf("Rotated array:\n");
-    for(int i = 0; i < n; i++) {
-        printf("%d ", temp[i]);
-    }
-
+    printf("%d %d", arr[minLeft], arr[minRight]);
     return 0;
 }
