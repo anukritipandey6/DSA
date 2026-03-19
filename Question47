@@ -1,0 +1,20 @@
+/* Problem: Height of Binary Tree
+Implement the solution for this problem.
+Input:
+- Input specifications
+Output:
+- Output specifications
+*/
+int maxDepth(struct TreeNode* root) {
+    // Base case
+    if (root == NULL) {
+        return 0;
+    }
+
+    // Recursive case
+    int leftHeight = maxDepth(root->left);
+    int rightHeight = maxDepth(root->right);
+
+    // Return max height + 1 (for current node)
+    return (leftHeight > rightHeight ? leftHeight : rightHeight) + 1;
+}
