@@ -1,0 +1,19 @@
+/*Problem: Count Leaf Node
+Implement the solution for this problem.
+Input:
+- Input specifications
+Output:
+- Output specifications
+*/
+int countLeafNodes(struct TreeNode* root) {
+    // Base case
+    if (root == NULL)
+        return 0;
+
+    // If leaf node
+    if (root->left == NULL && root->right == NULL)
+        return 1;
+
+    // Recursive call
+    return countLeafNodes(root->left) + countLeafNodes(root->right);
+}
