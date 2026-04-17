@@ -1,0 +1,56 @@
+/*Problem Statement
+Given an array of integers containing both positive and negative values, find the length of the longest contiguous subarray whose sum is equal to zero.
+Input Format
+An integer array arr[].
+Output Format
+Print the length of the longest subarray with sum equal to zero.
+Sample Input
+15 -2 2 -8 1 7 10 23
+Sample Output
+5
+Explanation
+The subarray [-2, 2, -8, 1, 7] has a sum of 0 and is the longest such subarray.
+*/
+#include <stdio.h>
+
+#define MAX 1000
+#define OFFSET 100000  // to handle negative sums
+
+int main() {
+    int arr[] = {15, -2, 2, -8, 1, 7, 10, 23};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    int prefixSum = 0, maxLen = 0;
+
+    // Hash map using array
+    int hash[2 * OFFSET + 1];
+
+    // Initialize with -1 (means not seen)
+    for (int i = 0; i < 2 * OFFSET + 1; i++) {
+        hash[i] = -1;
+    }
+
+    for (int i = 0; i < n; i++) {
+        prefixSum += arr[i];
+
+        // Case 1: sum = 0 from start
+        if (prefixSum == 0) {
+            maxLen = i + 1;
+        }
+
+        // Case 2: seen before
+        if (hash[prefixSum + OFFSET] != -1) {
+            int len = i - hash[prefixSum + OFFSET];
+            if (len > maxLen) {
+                maxLen = len;
+            }
+        } else {
+            // store first occurrence
+            hash[prefixSum + OFFSET] = i;
+        }
+    }
+
+    printf("%d\n", maxLen);
+
+    return 0;
+}
