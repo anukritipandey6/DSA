@@ -1,0 +1,74 @@
+/*Problem: For each element, count how many smaller elements appear on right side.
+Use merge sort technique or Fenwick Tree (BIT).
+*/
+#include <stdio.h>
+#include <stdlib.h>
+
+void merge(int arr[], int index[], int tempIndex[], int count[],
+           int left, int mid, int right) {
+
+    int i = left, j = mid + 1, k = left;
+    int rightCount = 0;
+
+    while (i <= mid && j <= right) {
+        if (arr[index[j]] < arr[index[i]]) {
+            tempIndex[k++] = index[j++];
+            rightCount++;
+        } else {
+            count[index[i]] += rightCount;
+            tempIndex[k++] = index[i++];
+        }
+    }
+
+    while (i <= mid) {
+        count[index[i]] += rightCount;
+        tempIndex[k++] = index[i++];
+    }
+
+    while (j <= right) {
+        tempIndex[k++] = index[j++];
+    }
+
+    for (int i = left; i <= right; i++) {
+        index[i] = tempIndex[i];
+    }
+}
+
+void mergeSort(int arr[], int index[], int tempIndex[],
+               int count[], int left, int right) {
+    if (left >= right) return;
+
+    int mid = (left + right) / 2;
+    mergeSort(arr, index, tempIndex, count, left, mid);
+    mergeSort(arr, index, tempIndex, count, mid + 1, right);
+    merge(arr, index, tempIndex, count, left, mid, right);
+}
+
+void countSmaller(int arr[], int n) {
+    int* index = (int*)malloc(n * sizeof(int));
+    int* tempIndex = (int*)malloc(n * sizeof(int));
+    int* count = (int*)calloc(n, sizeof(int));
+
+    for (int i = 0; i < n; i++) index[i] = i;
+
+    mergeSort(arr, index, tempIndex, count, 0, n - 1);
+
+    printf("Counts: ");
+    for (int i = 0; i < n; i++) {
+        printf("%d ", count[i]);
+    }
+    printf("\n");
+
+    free(index);
+    free(tempIndex);
+    free(count);
+}
+
+// Driver
+int main() {
+    int arr[] = {5, 2, 6, 1};
+    int n = sizeof(arr) / sizeof(arr[0]);
+
+    countSmaller(arr, n);
+    return 0;
+}
